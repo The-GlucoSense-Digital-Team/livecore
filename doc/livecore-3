@@ -1,0 +1,34 @@
+To scale Mediasoup across multiple Ubuntu VPS instances, you will use a built-in Mediasoup feature called **PipeTransport**. It is specifically designed to intercommunicate different Mediasoup routers collocated on the same host or on entirely separate physical hosts.
+
+### The CPU Bottleneck
+
+Mediasoup operates using C++ "Workers," where each Worker represents a subprocess that runs in a single CPU core. A single Worker can typically handle roughly 500 simultaneous consumers (viewers) before the CPU maxes out. If a Live Academy™ webinar grows to 1,000 or 5,000 attendees, the capabilities of a single server core will be easily exceeded.
+
+### The One-to-Many Pipe Architecture
+
+To bypass this limit, you transition to a distributed architecture using the `router.pipeToRouter()` API. This allows you to chain multiple servers together to distribute the load.
+
+1. **The Origin Server (Presenter):**
+The Live Academy™ presenter connects to a "Primary Router" on the main Ubuntu VPS and produces their audio and video streams.
+
+
+2. **The Edge Servers (Viewers):**
+Additional Ubuntu VPS instances (Edge Servers) are deployed running Mediasoup. These servers exist purely to handle the viewer load.
+
+
+3. **Pipe the Stream:**
+Using the `router.pipeToRouter()` function, the Primary Router transmits a single copy of the presenter's media stream to each of the Edge Routers via a `PipeTransport`.
+
+
+4. **Load Balance Consumers:**
+Attendees do not connect to the Origin Server. Instead, they connect at the transport level to the Edge Routers and consume the piped stream locally from their assigned server.
+
+
+### Implementation Strategy
+
+Because the webinar is distributed across separate physical servers, a central source of truth is required to manage the fleet.
+
+1. **Server Registry:** Create a table in Supabase to track all active Ubuntu VPS instances, their IP addresses, and their current consumer load.
+2. **Health Checks:** Have a Node.js script on each VPS continuously update Supabase with its current CPU usage and active viewer count.
+3. **Dynamic Routing:** When a user taps "Join Webinar" in the Flutter app, query Supabase for the Edge Server with the lowest load. The app's signaling logic then directs the client to establish its WebRTC connection (via Cloudflare DNS) with that specific VPS.
+4. **Infrastructure Scaling:** When anticipating a large turnout, you can use Termius to quickly connect to and configure new Ubuntu VPS instances, add them to the Supabase registry, and instantly increase the viewer capacity.
