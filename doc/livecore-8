@@ -1,0 +1,34 @@
+Yes, you can absolutely give your forked version of Mediasoup a proprietary new brand name.
+
+Mediasoup is distributed under the **ISC License**, which is a highly permissive open-source license (very similar to MIT and BSD). It allows you to freely copy, modify, distribute, and rebrand the software for commercial use.
+
+There is only one legal requirement: you must leave the original copyright notice and the short ISC license text intact in the underlying source code files to acknowledge the original creators (versatica). As long as that text remains in your repository's license file and code headers, you are completely free to rename the project, publish it under your own brand, and use it exclusively for the Live Academy™.
+
+Here are a few naming concepts for your new WebRTC engine, designed to fit naturally alongside an ecosystem of digital health tools, trackers, and educational platforms:
+
+### The "Sense" & "Gluco" Ecosystem
+
+These names tie the underlying streaming infrastructure directly to your primary corporate and product branding.
+
+* **GlucoCast SFU:** A straightforward, brand-forward name indicating the broadcast nature of the engine.
+* **SenseRTC:** A sleek, modern nod to the real-time communication protocol powering the engine, borrowing the suffix from your main application.
+* **Glucose Stream Engine:** A formal, descriptive title that clearly identifies the software's purpose and ownership.
+
+### The "Guardian" & "Guru" Motif
+
+These names personify the software, aligning with a theme of guidance, protection, and expertise.
+
+* **Stream Guardian:** Implies a highly reliable, robust engine that securely protects and delivers the webinar media traffic.
+* **Media Guru:** A friendly, authoritative name for the intelligent routing backend handling the complex video distribution.
+* **Cast Guardian:** Combines the broadcasting aspect with a strong, protective identity.
+
+### Academy & Education Focus
+
+These names highlight the specific utility of the engine—powering live educational webinars.
+
+* **AcademySync Engine:** Focuses on the real-time synchronization between the presenter and the audience.
+* **LiveLink Router:** A clean, functional name emphasizing the direct connection between the educator and the viewers.
+
+To officially implement this, you will need to update the `name` field in the `package.json` of your fork (e.g., changing `"name": "mediasoup"` to `"name": "@glucosense/sense-rtc"`).
+
+Would you like to discuss the exact steps for configuring your `package.json` and GitHub repository to securely host and install this newly named private package onto your Ubuntu VPS?
