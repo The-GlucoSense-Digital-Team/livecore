@@ -1,0 +1,28 @@
+Yes, you can absolutely make your new repository private and keep your custom fork exclusively for your company's use. You are not legally required to make your modified version open-source or publicly available.
+
+Here is exactly why and how this works for your desired setup:
+
+### The ISC License is Permissive, Not Copyleft
+
+Because Mediasoup is published under the **ISC License** (a highly permissive open-source license), it does not contain a "copyleft" or "viral" clause.
+
+* **Copyleft Licenses (e.g., GPL):** Dictate that if you modify the code and use it, you *must* release your modifications as open-source to the public.
+* **Permissive Licenses (e.g., ISC):** Give you the freedom to take the code, modify it, use it commercially, and keep your modified version completely closed-source.
+
+The only legal condition is that you leave the original developer's copyright notice and the short ISC license text intact within the underlying source code files. It does not force you to share those files with anyone outside of your organization.
+
+### Your Private GitHub Workflow
+
+You can confidently set your forked GitHub repository's visibility to **Private**. In fact, the deployment SOP we just generated is specifically designed for this proprietary architecture:
+
+* The guide explicitly instructs you to update your metadata by adding `"private": true` to prevent accidental publication to the public NPM registry.
+
+
+* Because the repository is now private, the server needs permission to access it. The industry standard is to use a Deploy Key—an SSH key pair granting read-only access to a single repository.
+
+
+* This ensures your Ubuntu VPS has secure, passwordless access to your GitHub repository to install the custom package directly from the source.
+
+
+
+Your modifications for the Live Academy™ will remain a strictly internal, proprietary asset completely under your control.
