@@ -1,0 +1,41 @@
+When you deploy a custom Mediasoup fork, the deployment process changes fundamentally. Normally, running `npm install mediasoup` downloads a prebuilt C++ binary for your specific server architecture. However, because you are installing from your own GitHub repository, NPM cannot fetch a prebuilt binary. It must compile the C++ media worker locally from source directly on your VPS.
+
+Here is how to execute this deployment using Termius:
+
+1. **Connect via Termius:** Establish the SSH session.
+Open Termius, create a new Host using your Ubuntu VPS IP address, specify your user (usually `root` or `ubuntu`), and attach your SSH key. Double-click the host to open the terminal session.
+
+
+2. **Install C++ Build Dependencies:** Required for compiling the custom fork.
+Run the following command in your Termius terminal to install the necessary C++ compiler tools and Python environment:
+
+```bash
+sudo apt update
+sudo apt install -y build-essential python3 python3-pip
+
+```
+
+
+3. **Transfer the Application Code:** Bring your Node.js signaling server to the VPS.
+You need to get your Node.js signaling server codebase—the layer that handles your Supabase authentication and WebRTC signaling—onto the VPS. You can either use `git clone` in the terminal, or open the built-in Termius SFTP panel to securely drag and drop your project files from your local machine to the server. Ensure your `package.json` points to your custom GitHub fork (e.g., `"mediasoup": "github:your-org/mediasoup"`).
+
+
+4. **Trigger the Worker Compilation:** This will take a few minutes.
+Navigate into your project folder and install the dependencies:
+
+```bash
+npm install
+
+```
+
+NPM will download your custom Mediasoup repository, detect the missing prebuilt binary, and automatically invoke `make` and `g++` to compile your customized C++ worker using the VPS's CPU cores.
+
+
+5. **Daemonize the Process:** Keep the server running in the background.
+If you run your server normally and then close Termius, the Live Academy™ process will die. Install a process manager like PM2 to keep it alive permanently:
+
+```bash
+npm install -g pm2
+pm2 start index.js --name "live-academy-sfu"
+
+```
