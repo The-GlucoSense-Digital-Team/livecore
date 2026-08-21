@@ -1,0 +1,34 @@
+To truly make an open-source project your own while maintaining the ability to pull in future updates, you don't just want to "clone" it—you want to **Fork** it.
+
+Forking creates a distinct, personal copy of the Mediasoup repository under your own GitHub account or organization. This gives you complete administrative control to push custom features tailored for the Live Academy™ while still preserving a link to the original project.
+
+Here is the exact workflow to set this up and start adapting the codebase:
+
+1. **Fork the Repository:**
+Navigate to the official `versatica/mediasoup` repository on GitHub in your browser. Click the "Fork" button in the top right corner. Select your personal account or your company organization as the destination. You now own a remote copy of the codebase.
+
+
+2. **Clone Your Fork Locally:**
+Open GitHub Desktop, go to **File > Clone repository**, and look under the "Your repositories" tab. Select your newly forked Mediasoup repository and clone it to your local machine. This establishes the connection between your local environment and your custom remote repository.
+
+
+3. **Open the Codebase:**
+Launch the repository folder in VS Code or Cursor. Mediasoup is fundamentally divided into two parts: a TypeScript/Node.js layer (found in the `node/` folder) and the low-level C++ media router (found in the `worker/` folder). Most of your custom Live Academy™ adaptations—like custom room logic, token validation, or modified API endpoints—will happen in the TypeScript layer.
+
+
+4. **Install and Build:** Requires Python and a C/C++ compiler.
+Open your terminal within the code editor and run `npm install`. Because Mediasoup relies on a C++ core, the installation process will automatically trigger the compilation of the Mediasoup worker using `make` or `ninja`. Ensure your local machine has the standard C++ build tools installed.
+
+
+5. **Establish an Upstream Remote:**
+As the Mediasoup team releases security patches or performance improvements, you'll want to merge them into your custom version. In your terminal, run `git remote add upstream [https://github.com/versatica/mediasoup.git](https://github.com/versatica/mediasoup.git)`. When a new official update drops, you can pull from `upstream`, resolve any conflicts with your custom features, and push the updated hybrid to your own fork.
+
+
+### Publishing Your Custom Version
+
+Once you have developed a better version, you cannot use the standard `npm install mediasoup` command on your Ubuntu VPS, because that will download the official version, not yours.
+
+Instead, you have two options for deployment:
+
+1. **Direct GitHub Installation:** You can configure your project's `package.json` to install directly from your GitHub fork by using the URL format: `"mediasoup": "github:your-username/mediasoup"`.
+2. **Private NPM Registry:** You can rename the package in the `package.json` (e.g., to `@glucosense/mediasoup`) and publish it to a private NPM registry or GitHub Packages, keeping your proprietary modifications completely secure.
