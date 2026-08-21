@@ -1,0 +1,199 @@
+Yes. **You can give your modified mediasoup fork a completely new proprietary brand name and present it as your own GlucoSense technology platform**, provided you continue complying with the mediasoup license.
+
+mediasoup is currently distributed under the permissive **ISC License**. That license permits commercial use, modification, copying, and distribution, including incorporation into proprietary products. Its principal condition is that the original copyright and ISC permission notice remain with copies of the mediasoup-derived software. ([mediasoup.org][1])
+
+The important distinction is this: **your new brand can be proprietary; your new code and enhancements can be proprietary; but you should not represent the original mediasoup code itself as having been created by GlucoSense.** The ISC license does not impose a GPL-style copyleft requirement that forces your proprietary enhancements to become open source. ([mediasoup.org][1])
+
+### My preferred name: **GlucoSense LiveCore™**
+
+I think this is the strongest strategic name for the fork.
+
+You could describe it officially as:
+
+**GlucoSense LiveCore™**
+*Proprietary Real-Time Communications & Interactive Learning Engine*
+
+And the architecture becomes very clean:
+
+**GlucoSense Live Academy™**
+↓
+**GlucoSense LiveCore™**
+↓
+WebRTC / RTP / networking infrastructure
+
+This creates an important distinction between the **customer-facing application** and the **underlying communications technology**.
+
+I would consider these names, ranked approximately in this order:
+
+1. **GlucoSense LiveCore™** — my recommendation. Sounds like foundational proprietary infrastructure and is broad enough for video, audio, webinars, workshops, telehealth, live classrooms, events, and future products.
+2. **GlucoSense LiveFabric™** — excellent if you want to position the technology as the distributed real-time communications fabric connecting participants, educators, clinicians, AI services, recording systems, etc.
+3. **GlucoSense MediaCore™** — technically clear and enterprise-oriented, although slightly more generic.
+4. **GlucoSense LiveMesh™** — strong infrastructure feel, particularly appropriate for distributed real-time media.
+5. **GlucoSense StreamCore™** — emphasizes media transport and streaming.
+6. **GlucoSense RTC Engine™** — technically precise because RTC means Real-Time Communications, although it is less distinctive as a trademark.
+7. **GS LiveCore™** — useful as a shortened engineering/platform designation.
+8. **SenseStream™ Engine** — potentially useful if you eventually want to commercialize the engine independently from the diabetes product.
+9. **GlucoSense AcademyCore™** — very tightly associated with Live Academy, but consequently less useful for telehealth or other future products.
+10. **GlucoSense LiveEngine™** — immediately understandable, although more descriptive and therefore potentially weaker from a trademark perspective.
+
+## Why I prefer **GlucoSense LiveCore™**
+
+It does something important strategically: it makes the technology sound like an **internal platform**, rather than simply a renamed open-source library.
+
+For example, your marketing and technical documentation could legitimately describe:
+
+> **GlucoSense Live Academy™ is powered by GlucoSense LiveCore™, our customized real-time communications and interactive learning infrastructure.**
+
+You could then build substantial proprietary capabilities around LiveCore, such as your authentication architecture, Supabase integration, room orchestration, instructor controls, diabetes-specific educational workflows, AI interaction layer, recording architecture, certificates, polls, quizzes, moderation, analytics, adaptive streaming policies, post-session AI processing, attendance tracking, event scheduling, permissions, clinic integrations, and other functionality.
+
+Those layers can become much more important commercially than the underlying SFU itself.
+
+## What actually belongs to you?
+
+Think of the IP as several separate layers.
+
+**1. The new trademark/brand**
+
+For example:
+
+**GlucoSense LiveCore™**
+
+That can be your proprietary trademark, subject to trademark clearance and registration.
+
+You should use **™** while asserting the brand and use **® only after obtaining an actual trademark registration** in the applicable jurisdiction.
+
+**2. Your original software**
+
+Everything your developers independently add—assuming it is genuinely original—can generally remain proprietary.
+
+For example:
+
+`GlucoSense LiveCore Orchestrator`
+`LiveCore Session Manager`
+`LiveCore AI Classroom Engine`
+`LiveCore Recording Engine`
+`LiveCore Polling Engine`
+`LiveCore Workshop Engine`
+`LiveCore Analytics`
+`LiveCore Clinical Webinar Layer`
+`LiveCore Adaptive Session Intelligence`
+
+These could be GlucoSense proprietary modules.
+
+**3. Your modifications to the mediasoup architecture**
+
+Because ISC is permissive, you have substantial flexibility in how you commercialize your modified implementation. The original mediasoup copyright and licensing obligations still need to be respected for mediasoup-derived portions. ([mediasoup.org][1])
+
+**4. Original mediasoup code**
+
+This remains subject to its original copyright and ISC license. You should therefore maintain its copyright/license notice in the appropriate source distributions, third-party license file, software notices, or other copies where required by the license. ([mediasoup.org][1])
+
+You do **not** need to make “mediasoup” part of the customer-facing product name merely because you are complying with the license.
+
+## I would actually remove “mediasoup” from the commercial identity
+
+Instead of marketing something such as:
+
+**GlucoSense Mediasoup™**
+
+I would strongly prefer:
+
+**GlucoSense LiveCore™**
+
+This gives you a clean proprietary identity and avoids creating the impression that your product is an official mediasoup product.
+
+Then, in your appropriate software/legal attribution documentation, you can provide the required open-source acknowledgement.
+
+For example, an internal `THIRD_PARTY_NOTICES` or licenses section could identify mediasoup, its copyright holder, and the ISC License. The official mediasoup license currently identifies copyright © 2015 Iñaki Baz Castillo and requires that the copyright and permission notice appear in copies. ([mediasoup.org][1])
+
+That legal notice does **not** need to become the central marketing identity of Live Academy.
+
+## You can go much further than simply “renaming the fork”
+
+This is the part I would emphasize strategically.
+
+If you have only changed a few configuration values, calling the technology a proprietary communications engine would be less compelling.
+
+But if your team progressively transforms the fork with GlucoSense-specific technology, then **GlucoSense LiveCore™ can become a genuine proprietary technology platform built partially upon an open-source foundation**.
+
+mediasoup intentionally provides a relatively low-level media-layer API and leaves signaling and application architecture to developers. Its own documentation describes it as a low-level component intended to be integrated into larger applications rather than as a complete opinionated conferencing application. ([mediasoup.org][2])
+
+That is particularly favorable for your strategy because much of what makes **LiveCore™** distinctive can exist above and around the SFU.
+
+For example, your differentiation could eventually include:
+
+**LiveCore Room Intelligence™** — dynamically manages rooms and participants.
+
+**LiveCore Adaptive Quality™** — GlucoSense's own policies for bandwidth, simulcast, SVC and device conditions.
+
+**LiveCore Academy Orchestrator™** — controls instructors, participants, sessions, workshops and educational events.
+
+**LiveCore AI Interaction Layer™** — integrates AI-generated questions, summaries, personalized learning plans and educational recommendations.
+
+**LiveCore Session Intelligence™** — analyses attendance, participation, quizzes, questions and engagement.
+
+**LiveCore Clinical Education Mode™** — specialized workflows for diabetes educators, endocrinologists, dietitians and clinical organizations.
+
+**LiveCore Replay Intelligence™** — recording, chapter generation, transcription and AI-generated session summaries.
+
+**LiveCore Engagement Engine™** — live polls, quizzes, Q&A, reactions and interactive exercises.
+
+At that point, mediasoup becomes one lower-level technology component within a much larger proprietary architecture.
+
+## A particularly strong brand hierarchy
+
+I would structure the portfolio like this:
+
+**GlucoSense™**
+Master diabetes platform
+
+**GlucoSense Live Academy™**
+Live diabetes education, webinars and interactive workshops
+
+**GlucoSense LiveCore™**
+Proprietary real-time communications and interactive-media engine powering Live Academy
+
+Then individual technology families could become:
+
+**LiveCore Video™**
+**LiveCore Audio™**
+**LiveCore Rooms™**
+**LiveCore Broadcast™**
+**LiveCore Engage™**
+**LiveCore Record™**
+**LiveCore AI™**
+**LiveCore Analytics™**
+**LiveCore Academy Engine™**
+
+That gives you something much more valuable than a single fork name: **a technology family.**
+
+## One important IP precaution
+
+Before filing a trademark application, conduct a proper clearance search covering at minimum the **USPTO, WIPO Global Brand Database, UKIPO and potentially EUIPO**, plus software products, domains, app stores, GitHub, package registries and common-law commercial use.
+
+A normal web search is **not** sufficient trademark clearance. That is particularly important for software because identical or confusingly similar marks may exist in adjacent communications, streaming, cloud or SaaS categories without ranking prominently in web searches.
+
+I would therefore treat all the names above as **candidate marks**, not as confirmation of registrability.
+
+### My final recommendation
+
+I would adopt:
+
+# **GlucoSense LiveCore™**
+
+with the positioning:
+
+**GlucoSense LiveCore™ — The Proprietary Real-Time Communications & Interactive Learning Engine Powering GlucoSense Live Academy™**
+
+And for the customer-facing relationship:
+
+**GlucoSense Live Academy™ — Powered by GlucoSense LiveCore™**
+
+That name is broad enough that later you could use the same technology for **CareConnect360™ telehealth, virtual diabetes clinics, provider consultations, group education, webinars, workshops, investor events, professional training and other real-time GlucoSense services** rather than trapping the technology inside the Live Academy use case.
+
+So, **yes: I would absolutely rebrand the fork rather than commercially calling it mediasoup.** Keep the required mediasoup ISC copyright/license attribution in the appropriate legal/software notices while building **LiveCore™ as the proprietary GlucoSense technology identity**. ([mediasoup.org][1])
+
+Because this touches software licensing and trademark law, have IP counsel review the final implementation, third-party dependencies, attribution file, and selected trademark before registration or a major commercial launch.
+
+[1]: https://mediasoup.org/license/?utm_source=chatgpt.com "License"
+[2]: https://mediasoup.org/?utm_source=chatgpt.com "mediasoup"
