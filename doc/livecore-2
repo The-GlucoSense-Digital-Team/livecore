@@ -1,0 +1,24 @@
+Yes, you can absolutely develop and adapt Mediasoup for your Live Academy™ webinar functionality. Mediasoup is published under the highly permissive ISC open-source license, which allows you to modify it, integrate it, and use it commercially within the GlucoSense app without restrictions.
+
+It is an excellent idea because Mediasoup operates as a Selective Forwarding Unit (SFU). Instead of aggressively mixing video streams together on the server—which requires massive computing power and adds latency—an SFU intelligently routes the presenter's video directly to all attendees separately. This makes it highly scalable and perfect for one-to-many or few-to-many webinar formats.
+
+Unlike standalone servers that dictate how your app should work, Mediasoup is designed simply as a low-level Node.js module. This means you aren't forced into a specific architecture and can build your own custom room logic around it.
+
+### How to Implement It Best
+
+To bring this into a pure Flutter and Supabase stack, you can follow this integration path:
+
+1. **Deploy the Media Router:**
+Install Mediasoup as a Node.js process directly on the Ubuntu VPS. You will need to open the specific UDP/TCP port ranges for WebRTC traffic in your firewall. You can use Cloudflare to manage your DNS and securely proxy the initial WebSocket (WSS) signaling connections, while the actual WebRTC media traffic flows directly to the VPS.
+
+
+2. **Build the Signaling Layer:**
+Mediasoup only handles the media routing—it doesn't inherently know who is in the webinar room. You need a signaling layer to pass WebRTC connection parameters (SDP and ICE candidates) between the Flutter app and the server. You can build this directly alongside Mediasoup in Node.js using WebSockets, while leveraging Supabase to authenticate users and verify if they have premium access to a specific Live Academy™ session.
+
+
+3. **Integrate the Flutter Client:** Use an existing Mediasoup wrapper.
+Add a package like `mediasfu_mediasoup_client` to your Flutter project. This package handles the complex WebRTC negotiation for you. It allows you to create `Device` objects, request capabilities from your VPS, and set up the local transports to send and receive media.
+
+
+4. **Configure Webinar Roles:**
+Structure the application logic in Cursor so that your webinar presenters connect as "Producers" (sending audio and video tracks to the server), while your Live Academy™ attendees connect purely as "Consumers" (receiving tracks). This keeps bandwidth usage extremely low for attendees since they don't upload any media.
