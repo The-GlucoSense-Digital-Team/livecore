@@ -1,0 +1,253 @@
+```python
+import os
+from weasyprint import HTML
+
+html_content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GlucoSense Live Academy - Private SFU Deployment Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 15mm;
+            background-color: #f8fbfa; /* subtle cool mint/grey background */
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #2c3e50;
+            line-height: 1.6;
+            font-size: 11pt;
+        }
+
+        .header {
+            margin: -20mm -15mm 10mm -15mm;
+            padding: 25mm 15mm 15mm 15mm;
+            background-color: #1a365d;
+            color: #ffffff;
+            border-bottom: 5px solid #38b2ac;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24pt;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 12pt;
+            color: #e2e8f0;
+        }
+
+        .section {
+            margin-bottom: 8mm;
+            background-color: #ffffff;
+            padding: 8mm;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            page-break-inside: avoid;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #2b6cb0;
+            font-size: 14pt;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 4px;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            color: #2d3748;
+            font-size: 12pt;
+            margin-bottom: 4px;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 1em;
+        }
+
+        .code-block {
+            background-color: #edf2f7;
+            border-left: 4px solid #4a5568;
+            padding: 10px 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9.5pt;
+            color: #1a202c;
+            overflow-x: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-bottom: 1em;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .callout {
+            background-color: #ebf8fa;
+            border: 1px solid #b2ebf2;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 10.5pt;
+            color: #00838f;
+        }
+
+        ul, ol {
+            margin-top: 0;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 6px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 9pt;
+            color: #a0aec0;
+            margin-top: 15mm;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 5mm;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Private Package Deployment SOP</h1>
+        <p>Configuring and Hosting the Custom GlucoSense WebRTC Fork</p>
+    </div>
+
+    <div class="section">
+        <h2>Phase 1: Rebrand the Codebase Locally</h2>
+        <p>Before installing the package on your server, the repository needs to be officially rebranded and marked as private to prevent accidental publication to the public NPM registry.</p>
+        <ol>
+            <li><strong>Open the Project:</strong> Launch the forked Mediasoup repository locally in VS Code.</li>
+            <li><strong>Edit the Manifest:</strong> Open the <code>package.json</code> file located in the root directory.</li>
+            <li><strong>Update the Metadata:</strong> Change the top-level name and private status:
+<div class="code-block">{
+  "name": "@glucosense/sense-rtc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Custom WebRTC SFU for Live Academy"
+}</div>
+            </li>
+            <li><strong>Commit and Push:</strong> Open GitHub Desktop, commit these changes with a message like "Rebrand package to SenseRTC", and push the commit to your private GitHub repository.</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Phase 2: Generate Secure Server Credentials</h2>
+        <p>Since the repository is now private, the server needs permission to access it. Hardcoding passwords or Personal Access Tokens (PATs) in URLs is a security risk. The industry standard is to use a <strong>Deploy Key</strong>—an SSH key pair granting read-only access to a single repository.</p>
+        <ol>
+            <li><strong>Access the Server:</strong> Open Termius and connect to your Ubuntu VPS via SSH.</li>
+            <li><strong>Generate the SSH Key:</strong> Run the following command in the Termius terminal to create a new key pair specifically for GitHub (do not set a passphrase when prompted):
+<div class="code-block">ssh-keygen -t ed25519 -C "vps-deploy-key@glucosense" -f ~/.ssh/github_deploy_key</div>
+            </li>
+            <li><strong>Start the SSH Agent:</strong> Ensure the server's SSH agent is running and add the new key:
+<div class="code-block">eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/github_deploy_key</div>
+            </li>
+            <li><strong>Extract the Public Key:</strong> Display the public key on the screen to copy it:
+<div class="code-block">cat ~/.ssh/github_deploy_key.pub</div>
+            </li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Phase 3: Authorize the Deploy Key on GitHub</h2>
+        <p>The public key generated on the server must now be registered with your private repository to authorize access.</p>
+        <ol>
+            <li>Navigate to your private <code>sense-rtc</code> repository on GitHub in a web browser.</li>
+            <li>Go to <strong>Settings</strong> &gt; <strong>Deploy keys</strong> (in the left sidebar).</li>
+            <li>Click <strong>Add deploy key</strong>.</li>
+            <li>Title it something recognizable, such as <em>"Live Academy Ubuntu VPS"</em>.</li>
+            <li>Paste the exact output copied from the Termius terminal (the <code>.pub</code> key) into the Key field.</li>
+            <li>Leave "Allow write access" unchecked (the server only needs read access to download the code). Click <strong>Add key</strong>.</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Phase 4: Configure the Node.js Signaling App</h2>
+        <p>Now that the Ubuntu VPS has secure, passwordless access to your GitHub repository, you can instruct your main Node.js signaling application to install the custom package directly from the source.</p>
+        <ol>
+            <li>Open the <code>package.json</code> file of your <strong>main signaling application</strong> (the app that handles Supabase auth and WebSockets, not the Mediasoup fork itself) in VS Code.</li>
+            <li>Add your custom package to the dependencies using the SSH Git URL format:
+<div class="code-block">"dependencies": {
+  "@glucosense/sense-rtc": "git+ssh://git@github.com/YourOrg/sense-rtc.git",
+  "express": "^4.18.2",
+  "socket.io": "^4.7.2"
+}</div>
+            </li>
+            <li>Commit and push these changes to your signaling application's repository via GitHub Desktop.</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Phase 5: Deploy and Compile on the VPS</h2>
+        <p>The final step is to pull the updated signaling application onto the server and install the dependencies. The VPS will use its authorized SSH key to securely clone the custom WebRTC engine and compile it locally.</p>
+        <ol>
+            <li>In your active Termius session, navigate to your signaling application's directory:
+<div class="code-block">cd /var/www/live-academy-signaling</div>
+            </li>
+            <li>Pull the latest code changes:
+<div class="code-block">git pull origin main</div>
+            </li>
+            <li>Install the packages:
+<div class="code-block">npm install</div>
+            </li>
+        </ol>
+        <div class="callout">
+            <strong>Compilation Note:</strong> During the `npm install` process, NPM will clone the `@glucosense/sense-rtc` repository using SSH. It will then automatically detect the C++ source code and invoke the server's build tools (make/g++) to compile the custom WebRTC worker using the VPS's CPU cores. This step may take several minutes.
+        </div>
+    </div>
+
+    <div class="footer">
+        Generated for GlucoSense Digital Corporation &bull; Internal Infrastructure Documentation
+    </div>
+
+</body>
+</html>
+"""
+
+with open("private_package_deployment.html", "w") as f:
+    f.write(html_content)
+
+HTML("private_package_deployment.html").write_pdf("GlucoSense_Deployment_SOP.pdf")
+print("Successfully generated GlucoSense_Deployment_SOP.pdf")
+
+
+```
+
+```text
+Successfully generated GlucoSense_Deployment_SOP.pdf
+
+
+```
+
+Your PDF guide is ready
+
+
+I have generated a detailed standard operating procedure (SOP) document outlining the exact steps.
+
+To securely host and install your custom WebRTC package (e.g., `@glucosense/sense-rtc`), the most robust and standard method for server deployment does not actually require setting up a paid NPM registry. Instead, you can authorize your server to install the package directly from your private GitHub repository using an SSH Deploy Key.
+
+The guide walks through the complete workflow:
+
+1. **Phase 1:** Updating the `package.json` locally in VS Code to rebrand the package and mark it as private, then pushing via GitHub Desktop.
+2. **Phase 2:** Generating a secure SSH key pair directly on the Ubuntu VPS using Termius.
+3. **Phase 3:** Authorizing that specific key in your private GitHub repository settings as a read-only Deploy Key.
+4. **Phase 4:** Configuring your main signaling app to point to the secure `git+ssh://` URL.
+5. **Phase 5:** Running the installation on the VPS, which will securely download your custom source code and trigger the C++ compilation.
+
+This approach keeps your proprietary code entirely off public or third-party package registries while ensuring the server has the exact authentication it needs to compile the media workers seamlessly.
