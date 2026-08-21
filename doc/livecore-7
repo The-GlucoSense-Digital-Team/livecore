@@ -1,0 +1,55 @@
+The `WebRtcServer` feature in Mediasoup allows you to bind an entire C++ Worker to a single port. Because Mediasoup scales by spawning one Worker per CPU core, a 4-core Ubuntu VPS would only need exactly four open UDP ports to handle thousands of connections, rather than a massive 10,000-port range.
+
+This heavily optimizes network routing and massively simplifies your firewall configuration.
+
+1. **Update UFW Firewall Rules:**
+Instead of opening a massive block, calculate the number of CPU cores on your VPS. If you have 4 cores, you will spawn 4 Workers, so open just 4 sequential ports (e.g., 44444 to 44447).
+
+```bash
+sudo ufw delete allow 40000:49999/udp
+sudo ufw allow 44444:44447/udp
+sudo ufw allow 44444:44447/tcp
+
+```
+
+
+2. **Instantiate the WebRtcServer:** Assign one port per worker.
+In your Node.js code, immediately after you spawn a `Worker`, create a `WebRtcServer` attached to it. You assign it a specific port based on the worker's array index (e.g., worker 0 gets port 44444).
+
+```javascript
+const webRtcServer = await worker.createWebRtcServer({
+  listenInfos: [
+    {
+      protocol: 'udp',
+      ip: '0.0.0.0',
+      announcedIp: '198.51.100.23', // Your unproxied VPS IP
+      port: 44444 + workerIndex
+    },
+    {
+      protocol: 'tcp',
+      ip: '0.0.0.0',
+      announcedIp: '198.51.100.23',
+      port: 44444 + workerIndex
+    }
+  ]
+});
+
+```
+
+
+3. **Attach Transports to the Server:** Modify transport creation logic.
+When a Live Academy™ attendee requests to send or receive media, you create a `WebRtcTransport`. Instead of passing the traditional `listenIps` array to this function (which forces Mediasoup to open a random new port from your range), pass the `webRtcServer` reference you just created.
+
+```javascript
+const transport = await router.createWebRtcTransport({
+  webRtcServer: webRtcServer, // This entirely replaces listenIps
+  enableUdp: true,
+  enableTcp: true,
+  preferUdp: true,
+  initialAvailableOutgoingBitrate: 1000000
+});
+
+```
+
+
+By routing everything through these dedicated ports, the Mediasoup Worker uses WebRTC's ICE and DTLS attributes to internally multiplex the traffic and mathematically determine exactly which packets belong to which specific attendee's video stream.
