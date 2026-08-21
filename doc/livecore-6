@@ -1,0 +1,56 @@
+The intersection of WebRTC, firewalls, and Cloudflare is where most Mediasoup deployments initially fail. The core issue is that WebRTC uses UDP packets for real-time audio and video, but Cloudflare’s default proxy (the "Orange Cloud") is designed almost exclusively for HTTP/HTTPS over TCP. If you try to push WebRTC media through a proxied Cloudflare record, Cloudflare simply drops the UDP packets.
+
+To fix this, you have to split your architecture: run your signaling (WebSockets) through Cloudflare's secure TCP proxy, but route your WebRTC media directly to the VPS via UDP.
+
+Here is the exact setup:
+
+1. **Configure the Ubuntu Firewall (UFW):** Don't lock yourself out of Termius.
+First, ensure you allow SSH access. Then, open your Node.js signaling port (e.g., 443 or 3000 for TCP) and a dedicated block of UDP ports for Mediasoup's WebRTC media traffic.
+
+```bash
+sudo ufw allow 22/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 40000:49999/udp
+sudo ufw enable
+
+```
+
+
+2. **Update Mediasoup Configuration:**
+In your custom Mediasoup codebase, update your `WorkerSettings` (usually found in your configuration file) to restrict the router to the exact port range you just opened in UFW.
+
+```javascript
+workerSettings: {
+  rtcMinPort: 40000,
+  rtcMaxPort: 49999,
+  // ...other settings
+}
+
+```
+
+
+3. **Split Your Cloudflare DNS Records:** WebRTC traffic must bypass the CDN proxy.
+You must decouple your signaling from your media transport to bypass Cloudflare's UDP block.
+
+* **Signaling Record:** Create an `A` record (e.g., `api.liveacademy.com`) pointing to your VPS IP and leave it **Proxied (Orange Cloud)**. Your Flutter app will connect to this for WebSocket signaling.
+* **Media Record:** Create a second `A` record (e.g., `media.liveacademy.com`) pointing to the same VPS IP, but toggle it to **DNS Only (Grey Cloud)**. This creates a direct pipeline for UDP traffic.
+
+
+4. **Set the Announced IP:**
+Finally, instruct Mediasoup to give the Flutter clients the direct, unproxied IP address during WebRTC negotiation. In your Mediasoup `webRtcTransportOptions`, set the `announcedIp` to your raw VPS IP.
+
+```javascript
+webRtcTransportOptions: {
+  listenIps: [
+    {
+      ip: '0.0.0.0', // Listen on all network interfaces
+      announcedIp: '198.51.100.23' // Replace with your actual VPS public IP
+    }
+  ],
+  // ...
+}
+
+```
+
+
+> **Key insight:** Opening 10,000 UDP ports is the standard starting point, but modern Mediasoup versions include a feature called `WebRtcServer`. This allows you to multiplex all WebRTC traffic through a *single* UDP port per CPU core, massively simplifying your firewall rules.
